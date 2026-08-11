@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./icon-180.png" />
 <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-single-ticker.js"></script>
-<title>DeskBoard v8 · iPad Dashboard</title>
+<title>DeskBoard v9.2 · iPad Dashboard</title>
 <style>
 :root{
   color-scheme:dark;
@@ -20,7 +20,7 @@
   --panel:#0f131b;--panel2:#0e131b;--chip:#151b26;--chipActive:#263a59;
   --head:rgba(13,17,25,.90);--shadow:0 8px 30px rgba(0,0,0,.16);
   --radius:18px;
-  --custom-bg:none;--bg-opacity:0;--bg-blur:0px;--glass-alpha:100%;
+  --custom-bg:none;--bg-opacity:0;--bg-blur:0px;--glass-alpha:100%;--bg-pos-x:50%;--bg-pos-y:50%;
   --top-h:118px;--tape-h:48px;--nav-h:62px;--market-fr:56fr;--news-fr:44fr;
 }
 html[data-theme="light"]{
@@ -34,7 +34,7 @@ html[data-theme="light"]{
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans SC","Segoe UI",sans-serif;position:relative}
-body::before{content:"";position:fixed;inset:-18px;z-index:-2;background-image:var(--custom-bg);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:var(--bg-opacity);filter:blur(var(--bg-blur));transform:scale(1.04);pointer-events:none}
+body::before{content:"";position:fixed;inset:-18px;z-index:-2;background-image:var(--custom-bg);background-size:cover;background-position:var(--bg-pos-x) var(--bg-pos-y);background-repeat:no-repeat;opacity:var(--bg-opacity);filter:blur(var(--bg-blur));transform:scale(1.04);pointer-events:none}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:color-mix(in srgb,var(--bg) 18%,transparent);pointer-events:none}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -47,16 +47,13 @@ button{cursor:pointer}
 .card{background:linear-gradient(180deg,color-mix(in srgb,var(--card) var(--glass-alpha),transparent),color-mix(in srgb,var(--card-2) var(--glass-alpha),transparent));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:0;min-height:0;box-shadow:var(--shadow)}
 .top{display:grid;grid-template-columns:.92fr 1.35fr;gap:9px;min-height:0}
 .clock{padding:10px 16px;display:flex;flex-direction:column;justify-content:center;position:relative}
-.clock-photo{position:absolute;right:48px;top:7px;bottom:7px;width:42%;border-radius:13px;object-fit:cover;object-position:center;opacity:0;display:none;pointer-events:none;z-index:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%)}
+.clock-photo{position:absolute;right:7px;top:7px;bottom:7px;width:48%;border-radius:13px;object-fit:cover;object-position:50% 50%;opacity:0;display:none;pointer-events:none;z-index:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%)}
 .clock-photo.show{display:block}
 #time,#date{position:relative;z-index:1}
 #time{font-size:42px;font-weight:760;line-height:.95;letter-spacing:-2px;font-variant-numeric:tabular-nums}
-#date{font-size:13px;color:var(--muted);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:36px}
-.theme-quick{
-  position:absolute;right:10px;bottom:9px;width:31px;height:31px;border-radius:10px;
-  border:1px solid var(--line);background:var(--card-3);display:grid;place-items:center;
-  font-size:15px;padding:0;
-}
+#date{font-size:13px;color:var(--muted);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:30%}
+.theme-quick{font-size:18px;padding:0}
+
 .weather{padding:8px 13px;display:grid;grid-template-rows:auto 1fr;gap:5px}
 .weather-current{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:0}
 .wx-main{display:flex;align-items:center;gap:10px;min-width:0}
@@ -123,13 +120,34 @@ button{cursor:pointer}
 .cat-finance{color:var(--blue)}.cat-world{color:#a66fda}.cat-tech{color:#1ea98d}.cat-game{color:#d97706}
 .openmark{color:var(--muted);font-size:14px;align-self:center}
 .loading,.empty{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12px;padding:24px;line-height:1.65}
-.nav{display:grid;grid-template-columns:1.18fr 1.18fr .92fr .50fr .50fr;gap:7px;min-height:0}
-.nav a,.nav button{border:1px solid var(--line);background:var(--card);border-radius:16px;text-decoration:none;color:var(--text);display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:720;min-width:0;padding:0 7px}
-.nav a:active,.nav button:active{transform:scale(.985);background:var(--card-3)}
-.nav .feedly{background:linear-gradient(180deg,color-mix(in srgb,#2bb24c 25%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#2bb24c 50%,var(--line))}
-.nav .fidelity{background:linear-gradient(180deg,color-mix(in srgb,#2e8b57 21%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#2e8b57 48%,var(--line))}
-.nav .twitter{background:linear-gradient(180deg,color-mix(in srgb,#4f7cff 18%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#4f7cff 43%,var(--line))}
-.nav .iconbtn{font-size:18px;padding:0}
+.nav{
+  display:grid;
+  grid-template-columns:auto repeat(4,minmax(0,1fr)) 46px 46px 46px;
+  gap:7px;min-height:0;align-items:stretch;
+}
+.nav-title{
+  display:flex;align-items:center;justify-content:center;padding:0 12px;
+  border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--card-3) 72%,var(--card)),var(--card-2));
+  color:var(--muted);font-size:11px;font-weight:780;letter-spacing:.08em;white-space:nowrap;
+}
+.nav a,.nav button{
+  border:1px solid var(--line);background:var(--card);border-radius:16px;text-decoration:none;color:var(--text);
+  display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:740;min-width:0;padding:0 9px;
+  box-shadow:0 3px 12px color-mix(in srgb,#000 7%,transparent);transition:transform .12s ease,filter .12s ease,border-color .12s ease;
+}
+.nav a:active,.nav button:active{transform:scale(.978);filter:brightness(.98)}
+.nav-icon{
+  width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:0 0 28px;
+  background:color-mix(in srgb,var(--card-3) 78%,transparent);font-size:15px;font-weight:800;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 72%,transparent);
+}
+.nav .gpt{background:linear-gradient(180deg,color-mix(in srgb,#10a37f 19%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#10a37f 45%,var(--line))}
+.nav .twitter{background:linear-gradient(180deg,color-mix(in srgb,#627cff 16%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#627cff 39%,var(--line))}
+.nav .feedly{background:linear-gradient(180deg,color-mix(in srgb,#2bb24c 20%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#2bb24c 43%,var(--line))}
+.nav .fidelity{background:linear-gradient(180deg,color-mix(in srgb,#18864b 19%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#18864b 42%,var(--line))}
+.nav .iconbtn{font-size:18px;padding:0;background:linear-gradient(180deg,var(--card),var(--card-2))}
+.nav .theme-quick{background:linear-gradient(180deg,color-mix(in srgb,#8a73ff 14%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#8a73ff 34%,var(--line))}
 .nav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* settings */
@@ -187,7 +205,7 @@ button{cursor:pointer}
 .custom-card{border:1px solid var(--line);border-radius:14px;background:var(--card-2);padding:12px}
 .custom-card.wide{grid-column:1/-1}
 .custom-preview{height:92px;border:1px solid var(--line);border-radius:11px;background:var(--panel);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);font-size:11px;margin:8px 0}
-.custom-preview img{width:100%;height:100%;object-fit:cover}
+.custom-preview img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
 .custom-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}
 .custom-row input[type=range]{width:100%;accent-color:var(--blue)}
 .custom-row .layout-value{min-width:48px;text-align:right}
@@ -205,7 +223,11 @@ button{cursor:pointer}
 @media (max-height:900px){
   .dashboard{gap:7px}
   .section-head{height:38px;flex-basis:38px}.filters{flex-basis:34px}.news-item{padding:7px 7px}.news-title{font-size:12px}.nav a,.nav button{border-radius:14px}
-  #time{font-size:36px}.theme-quick{bottom:7px}
+  #time{font-size:36px}
+}
+@media (max-width:900px){
+  .nav{grid-template-columns:auto repeat(4,minmax(0,1fr)) 42px 42px 42px;gap:5px}
+  .nav-title{padding:0 8px;font-size:10px}.nav a{gap:5px;padding:0 5px}.nav-icon{width:24px;height:24px;flex-basis:24px;font-size:13px}
 }
 @media (max-width:700px){.layout-grid,.data-note{grid-template-columns:1fr}}
 @media (max-width:700px){
@@ -221,7 +243,6 @@ button{cursor:pointer}
       <img id="clockPhoto" class="clock-photo" alt="" />
       <div id="time">--:--</div>
       <div id="date">----</div>
-      <button id="themeQuick" class="theme-quick" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
     </div>
     <div class="card weather">
       <div class="weather-current">
@@ -283,12 +304,15 @@ button{cursor:pointer}
     </div>
   </section>
 
-  <nav class="nav">
-    <a class="feedly" href="https://feedly.com/i/my" target="_blank" rel="noopener"><span>📰</span><span class="nav-label">Feedly</span></a>
-    <a class="fidelity" href="https://www.fidelity.com/" target="_blank" rel="noopener"><span>💹</span><span class="nav-label">Fidelity</span></a>
-    <a class="twitter" href="https://x.com/home" target="_blank" rel="noopener"><span>𝕏</span><span class="nav-label">Twitter</span></a>
-    <button class="iconbtn" aria-label="设置" onclick="openSettings()">⚙</button>
-    <button class="iconbtn refresh" aria-label="刷新" onclick="manualRefresh()">↻</button>
+  <nav class="nav" aria-label="常用链接">
+    <div class="nav-title">常用链接</div>
+    <a class="gpt" href="https://chatgpt.com/" target="_blank" rel="noopener"><span class="nav-icon">✦</span><span class="nav-label">ChatGPT</span></a>
+    <a class="twitter" href="https://x.com/home" target="_blank" rel="noopener"><span class="nav-icon">𝕏</span><span class="nav-label">Twitter</span></a>
+    <a class="feedly" href="https://feedly.com/i/my" target="_blank" rel="noopener"><span class="nav-icon">▤</span><span class="nav-label">Feedly</span></a>
+    <a class="fidelity" href="https://www.fidelity.com/" target="_blank" rel="noopener"><span class="nav-icon">↗</span><span class="nav-label">Fidelity</span></a>
+    <button id="themeQuick" class="iconbtn theme-quick" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
+    <button class="iconbtn" aria-label="设置" title="设置" onclick="openSettings()">⚙</button>
+    <button class="iconbtn refresh" aria-label="刷新" title="刷新" onclick="manualRefresh()">↻</button>
   </nav>
 </main>
 
@@ -397,6 +421,11 @@ button{cursor:pointer}
             <input id="bgOpacityRange" type="range" min="0" max="85" step="1" oninput="setAppearanceValue('bgOpacity',this.value)">
             <div class="custom-row"><div>背景模糊</div><span id="bgBlurValue" class="layout-value"></span></div>
             <input id="bgBlurRange" type="range" min="0" max="18" step="1" oninput="setAppearanceValue('bgBlur',this.value)">
+            <div class="custom-row"><div>背景焦点 · 左右</div><span id="bgPosXValue" class="layout-value"></span></div>
+            <input id="bgPosXRange" type="range" min="0" max="100" step="1" oninput="setAppearanceValue('bgPosX',this.value)">
+            <div class="custom-row"><div>背景焦点 · 上下</div><span id="bgPosYValue" class="layout-value"></span></div>
+            <input id="bgPosYRange" type="range" min="0" max="100" step="1" oninput="setAppearanceValue('bgPosY',this.value)">
+            <div class="help" style="margin:6px 0 0">0% = 左 / 上，50% = 居中，100% = 右 / 下。用于选择图片哪一部分作为视觉中心。</div>
             <div class="custom-row"><div>卡片透明度</div><span id="glassValue" class="layout-value"></span></div>
             <input id="glassRange" type="range" min="76" max="100" step="1" oninput="setAppearanceValue('glass',this.value)">
           </div>
@@ -411,7 +440,12 @@ button{cursor:pointer}
             <div class="custom-row"><label><input id="clockPhotoShow" type="checkbox" onchange="setAppearanceValue('clockPhotoShow',this.checked)"> 显示在时间卡右侧</label><span></span></div>
             <div class="custom-row"><div>图片透明度</div><span id="photoOpacityValue" class="layout-value"></span></div>
             <input id="photoOpacityRange" type="range" min="20" max="100" step="1" oninput="setAppearanceValue('clockPhotoOpacity',this.value)">
+            <div class="custom-row"><div>图片焦点 · 左右</div><span id="photoPosXValue" class="layout-value"></span></div>
+            <input id="photoPosXRange" type="range" min="0" max="100" step="1" oninput="setAppearanceValue('clockPhotoPosX',this.value)">
+            <div class="custom-row"><div>图片焦点 · 上下</div><span id="photoPosYValue" class="layout-value"></span></div>
+            <input id="photoPosYRange" type="range" min="0" max="100" step="1" oninput="setAppearanceValue('clockPhotoPosY',this.value)">
             <div class="custom-row"><div>填充方式</div><select id="clockPhotoFit" class="field" style="width:120px" onchange="setAppearanceValue('clockPhotoFit',this.value)"><option value="cover">裁切铺满</option><option value="contain">完整显示</option></select></div>
+            <div class="help" style="margin:6px 0 0">使用“裁切铺满”时，焦点滑杆最明显；可以把人物脸部、Logo 或画面主体移动到时间卡可见区域。</div>
           </div>
 
           <div class="custom-card wide">
@@ -561,7 +595,7 @@ const DEFAULT_FEEDS = [
 ];
 const KEYS={stocks:"deskboard_stocks_v3",feeds:"deskboard_feeds_v3",theme:"deskboard_theme_v3",layout:"deskboard_layout_v6",appearance:"deskboard_appearance_v1",pulseFilter:"deskboard_pulse_filter_v1",rssCache:"deskboard_rss_cache_v8",liveCache:"deskboard_live_cache_v2"};
 const DEFAULT_LAYOUT={top:118,tape:48,nav:62,split:56,cols:0};
-const DEFAULT_APPEARANCE={bgImage:"",bgOpacity:0,bgBlur:0,glass:100,clockPhoto:"",clockPhotoShow:false,clockPhotoFit:"cover",clockPhotoOpacity:88};
+const DEFAULT_APPEARANCE={bgImage:"",bgOpacity:0,bgBlur:0,bgPosX:50,bgPosY:50,glass:100,clockPhoto:"",clockPhotoShow:false,clockPhotoFit:"cover",clockPhotoOpacity:88,clockPhotoPosX:50,clockPhotoPosY:50};
 const CONFIG={fallbackWeather:{lat:47.6769,lon:-122.2060,label:"Kirkland"},rssRefreshMinutes:10,liveRefreshSeconds:20};
 const MACRO_TAPE=[
   {proName:"AMEX:IWM",title:"小盘 IWM"},
@@ -604,29 +638,47 @@ function applyAppearance(){
   root.style.setProperty('--custom-bg',cssUrl(appearance.bgImage));
   root.style.setProperty('--bg-opacity',Math.max(0,Math.min(85,Number(appearance.bgOpacity)||0))/100);
   root.style.setProperty('--bg-blur',`${Math.max(0,Math.min(18,Number(appearance.bgBlur)||0))}px`);
+  root.style.setProperty('--bg-pos-x',`${Math.max(0,Math.min(100,Number(appearance.bgPosX)??50))}%`);
+  root.style.setProperty('--bg-pos-y',`${Math.max(0,Math.min(100,Number(appearance.bgPosY)??50))}%`);
   root.style.setProperty('--glass-alpha',`${Math.max(76,Math.min(100,Number(appearance.glass)||100))}%`);
   if(clockPhoto){
     if(appearance.clockPhoto){clockPhoto.src=appearance.clockPhoto}else{clockPhoto.removeAttribute('src')}
     clockPhoto.classList.toggle('show',!!appearance.clockPhoto&&!!appearance.clockPhotoShow);
     clockPhoto.style.objectFit=appearance.clockPhotoFit==='contain'?'contain':'cover';
+    clockPhoto.style.objectPosition=`${Math.max(0,Math.min(100,Number(appearance.clockPhotoPosX)??50))}% ${Math.max(0,Math.min(100,Number(appearance.clockPhotoPosY)??50))}%`;
     clockPhoto.style.opacity=(Math.max(20,Math.min(100,Number(appearance.clockPhotoOpacity)||88))/100);
   }
-  const vals={bgOpacityValue:`${appearance.bgOpacity||0}%`,bgBlurValue:`${appearance.bgBlur||0}px`,glassValue:`${appearance.glass||100}%`,photoOpacityValue:`${appearance.clockPhotoOpacity||88}%`};
+  const vals={
+    bgOpacityValue:`${appearance.bgOpacity||0}%`,bgBlurValue:`${appearance.bgBlur||0}px`,
+    bgPosXValue:`${appearance.bgPosX??50}%`,bgPosYValue:`${appearance.bgPosY??50}%`,
+    glassValue:`${appearance.glass||100}%`,photoOpacityValue:`${appearance.clockPhotoOpacity||88}%`,
+    photoPosXValue:`${appearance.clockPhotoPosX??50}%`,photoPosYValue:`${appearance.clockPhotoPosY??50}%`
+  };
   Object.entries(vals).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v});
-  const inputs={bgOpacityRange:appearance.bgOpacity,bgBlurRange:appearance.bgBlur,glassRange:appearance.glass,photoOpacityRange:appearance.clockPhotoOpacity};
+  const inputs={
+    bgOpacityRange:appearance.bgOpacity,bgBlurRange:appearance.bgBlur,bgPosXRange:appearance.bgPosX??50,bgPosYRange:appearance.bgPosY??50,
+    glassRange:appearance.glass,photoOpacityRange:appearance.clockPhotoOpacity,
+    photoPosXRange:appearance.clockPhotoPosX??50,photoPosYRange:appearance.clockPhotoPosY??50
+  };
   Object.entries(inputs).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});
   const cb=document.getElementById('clockPhotoShow');if(cb)cb.checked=!!appearance.clockPhotoShow;
   const fit=document.getElementById('clockPhotoFit');if(fit)fit.value=appearance.clockPhotoFit||'cover';
   renderAppearancePreviews();
 }
 function setAppearanceValue(k,v){
-  if(['bgOpacity','bgBlur','glass','clockPhotoOpacity'].includes(k))v=Number(v);
+  if(['bgOpacity','bgBlur','bgPosX','bgPosY','glass','clockPhotoOpacity','clockPhotoPosX','clockPhotoPosY'].includes(k))v=Number(v);
   appearance[k]=v;saveStored(KEYS.appearance,appearance);applyAppearance();
 }
 function renderAppearancePreviews(){
   const bp=document.getElementById('bgPreview'),pp=document.getElementById('photoPreview');
-  if(bp)bp.innerHTML=appearance.bgImage?`<img src="${escapeAttr(appearance.bgImage)}" alt="背景预览">`:'未设置背景图';
-  if(pp)pp.innerHTML=appearance.clockPhoto?`<img src="${escapeAttr(appearance.clockPhoto)}" alt="收藏图预览">`:'未设置收藏图片';
+  if(bp){
+    bp.innerHTML=appearance.bgImage?`<img src="${escapeAttr(appearance.bgImage)}" alt="背景预览">`:'未设置背景图';
+    const img=bp.querySelector('img');if(img)img.style.objectPosition=`${appearance.bgPosX??50}% ${appearance.bgPosY??50}%`;
+  }
+  if(pp){
+    pp.innerHTML=appearance.clockPhoto?`<img src="${escapeAttr(appearance.clockPhoto)}" alt="收藏图预览">`:'未设置收藏图片';
+    const img=pp.querySelector('img');if(img){img.style.objectFit=appearance.clockPhotoFit==='contain'?'contain':'cover';img.style.objectPosition=`${appearance.clockPhotoPosX??50}% ${appearance.clockPhotoPosY??50}%`}
+  }
 }
 function compressImageFile(file,maxW,maxH,quality=.84){return new Promise((resolve,reject)=>{
   if(!file?.type?.startsWith('image/'))return reject(new Error('not image'));
@@ -636,8 +688,8 @@ function compressImageFile(file,maxW,maxH,quality=.84){return new Promise((resol
     try{resolve(c.toDataURL('image/jpeg',quality))}catch(e){reject(e)}
   };img.src=reader.result};reader.readAsDataURL(file)
 })}
-async function handleBackgroundUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.bgImage=await compressImageFile(f,1920,1400,.82);if(!appearance.bgOpacity)appearance.bgOpacity=32;if(appearance.glass===100)appearance.glass=94;saveStored(KEYS.appearance,appearance);applyAppearance();toast('背景图已保存在本机')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
-async function handleClockPhotoUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.clockPhoto=await compressImageFile(f,1000,700,.86);appearance.clockPhotoShow=true;saveStored(KEYS.appearance,appearance);applyAppearance();toast('收藏图片已加入时间卡')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
+async function handleBackgroundUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.bgImage=await compressImageFile(f,1920,1400,.82);appearance.bgPosX=50;appearance.bgPosY=50;if(!appearance.bgOpacity)appearance.bgOpacity=32;if(appearance.glass===100)appearance.glass=94;saveStored(KEYS.appearance,appearance);applyAppearance();toast('背景图已保存在本机')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
+async function handleClockPhotoUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.clockPhoto=await compressImageFile(f,1000,700,.86);appearance.clockPhotoShow=true;appearance.clockPhotoPosX=50;appearance.clockPhotoPosY=50;saveStored(KEYS.appearance,appearance);applyAppearance();toast('收藏图片已加入时间卡')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
 function clearBackgroundImage(){appearance.bgImage='';appearance.bgOpacity=0;saveStored(KEYS.appearance,appearance);applyAppearance();toast('背景图已移除')}
 function clearClockPhoto(){appearance.clockPhoto='';appearance.clockPhotoShow=false;saveStored(KEYS.appearance,appearance);applyAppearance();toast('收藏图片已移除')}
 function applyBackgroundUrl(){const e=document.getElementById('backgroundUrl'),u=e?.value.trim();if(!u)return toast('请输入图片 URL');if(!/^https?:\/\//i.test(u))return toast('请输入 http/https 图片 URL');appearance.bgImage=u;if(!appearance.bgOpacity)appearance.bgOpacity=32;if(appearance.glass===100)appearance.glass=94;saveStored(KEYS.appearance,appearance);applyAppearance();toast('已应用背景 URL')}
@@ -1043,7 +1095,7 @@ function addFeed(){
 
 /* backup */
 function exportConfig(){
-  const data={version:9,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter};
+  const data={version:9.2,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`deskboard-config-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
 }
