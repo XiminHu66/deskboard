@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./icon-180.png" />
 <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-single-ticker.js"></script>
-<title>DeskBoard v7 · iPad Dashboard</title>
+<title>DeskBoard v8 · iPad Dashboard</title>
 <style>
 :root{
   color-scheme:dark;
@@ -20,6 +20,7 @@
   --panel:#0f131b;--panel2:#0e131b;--chip:#151b26;--chipActive:#263a59;
   --head:rgba(13,17,25,.90);--shadow:0 8px 30px rgba(0,0,0,.16);
   --radius:18px;
+  --custom-bg:none;--bg-opacity:0;--bg-blur:0px;--glass-alpha:100%;
   --top-h:118px;--tape-h:48px;--nav-h:62px;--market-fr:56fr;--news-fr:44fr;
 }
 html[data-theme="light"]{
@@ -32,7 +33,9 @@ html[data-theme="light"]{
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans SC","Segoe UI",sans-serif}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans SC","Segoe UI",sans-serif;position:relative}
+body::before{content:"";position:fixed;inset:-18px;z-index:-2;background-image:var(--custom-bg);background-size:cover;background-position:center;background-repeat:no-repeat;opacity:var(--bg-opacity);filter:blur(var(--bg-blur));transform:scale(1.04);pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:color-mix(in srgb,var(--bg) 18%,transparent);pointer-events:none}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 .dashboard{
@@ -41,9 +44,12 @@ button{cursor:pointer}
   display:grid;gap:9px;
   grid-template-rows:var(--top-h) var(--tape-h) minmax(0,var(--market-fr)) minmax(0,var(--news-fr)) var(--nav-h);
 }
-.card{background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:0;min-height:0;box-shadow:var(--shadow)}
+.card{background:linear-gradient(180deg,color-mix(in srgb,var(--card) var(--glass-alpha),transparent),color-mix(in srgb,var(--card-2) var(--glass-alpha),transparent));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:0;min-height:0;box-shadow:var(--shadow)}
 .top{display:grid;grid-template-columns:.92fr 1.35fr;gap:9px;min-height:0}
 .clock{padding:10px 16px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.clock-photo{position:absolute;right:48px;top:7px;bottom:7px;width:42%;border-radius:13px;object-fit:cover;object-position:center;opacity:0;display:none;pointer-events:none;z-index:0;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.72) 28%,#000 55%)}
+.clock-photo.show{display:block}
+#time,#date{position:relative;z-index:1}
 #time{font-size:42px;font-weight:760;line-height:.95;letter-spacing:-2px;font-variant-numeric:tabular-nums}
 #date{font-size:13px;color:var(--muted);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:36px}
 .theme-quick{
@@ -57,7 +63,7 @@ button{cursor:pointer}
 #wxIcon{font-size:34px;line-height:1}
 #wxTemp{font-size:34px;font-weight:780;line-height:1;font-variant-numeric:tabular-nums}
 #wxPlace{font-size:11px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px}
-#wxExtra{font-size:11px;line-height:1.4;text-align:right;color:var(--soft);white-space:nowrap}
+#wxExtra{font-size:11px;line-height:1.32;text-align:right;color:var(--soft);white-space:nowrap}
 .forecast-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;min-height:0}
 .forecast-item{display:grid;grid-template-columns:auto auto;grid-template-areas:"time icon" "temp rain";align-items:center;justify-content:space-between;padding:4px 6px;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--card-3) 72%,transparent);font-variant-numeric:tabular-nums}
 .fc-time{grid-area:time;font-size:10px;color:var(--muted);font-weight:650}.fc-icon{grid-area:icon;font-size:16px;line-height:1}.fc-temp{grid-area:temp;font-size:11.5px;font-weight:760}.fc-rain{grid-area:rain;font-size:9px;color:var(--blue)}
@@ -65,24 +71,28 @@ button{cursor:pointer}
 .tvhost{width:100%;height:100%;min-width:0;min-height:0}
 .tvhost>.tradingview-widget-container,.tvhost .tradingview-widget-container__widget{width:100%!important;height:100%!important}
 .section{position:relative;display:flex;flex-direction:column;min-height:0}
-.section-head{height:42px;flex:0 0 42px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:var(--head)}
+.section-head{height:42px;flex:0 0 42px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--head) var(--glass-alpha),transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .section-title{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:800;letter-spacing:.10em;color:var(--text)}
 .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 12%,transparent)}
 .section-sub{font-size:11px;color:var(--muted);letter-spacing:0}
 .market-body{flex:1;display:grid;gap:1px;background:var(--line);min-height:0;overflow:hidden}
-.market-cell{background:var(--panel);min-width:0;min-height:0;position:relative;overflow:hidden;--tv-widget-background-color:transparent;--tv-widget-positive-color:#18b77a;--tv-widget-negative-color:#f0445e}
+.market-cell{background:color-mix(in srgb,var(--panel) var(--glass-alpha),transparent);min-width:0;min-height:0;position:relative;overflow:hidden;--tv-widget-background-color:transparent;--tv-widget-positive-color:#18b77a;--tv-widget-negative-color:#f0445e}
 .market-cell tv-single-ticker{display:block;width:100%;height:100%;min-width:0;min-height:0}
-.market-empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;background:var(--panel)}
+.market-empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;background:color-mix(in srgb,var(--panel) var(--glass-alpha),transparent)}
 .news-head-left{display:flex;align-items:center;gap:11px;min-width:0}
 .switcher{display:flex;gap:4px;background:var(--panel2);padding:3px;border:1px solid var(--line);border-radius:10px}
 .switcher button{border:0;background:transparent;padding:5px 9px;border-radius:7px;font-size:11px;color:var(--muted)}
 .switcher button.active{background:var(--chipActive);color:var(--text)}
 #lastUpdate{font-size:10px;color:var(--muted);white-space:nowrap}
-.news-stage{position:relative;flex:1;min-height:0;background:var(--panel2)}
+.news-stage{position:relative;flex:1;min-height:0;background:color-mix(in srgb,var(--panel2) var(--glass-alpha),transparent)}
 .news-pane{position:absolute;inset:0;transition:opacity .16s ease;min-height:0}
 .news-pane.hidden{opacity:0;pointer-events:none;z-index:0}
 .news-pane.active{opacity:1;pointer-events:auto;z-index:2}
 #pulsePane,#rssPane{display:flex;flex-direction:column}
+.pulse-filters{height:36px;flex:0 0 36px;display:flex;align-items:center;gap:6px;padding:5px 10px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--panel2) 90%,transparent)}
+.pulse-filter{border:1px solid var(--line);background:var(--chip);color:var(--muted);border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;white-space:nowrap}
+.pulse-filter.active{background:var(--chipActive);color:var(--text);border-color:color-mix(in srgb,var(--blue) 50%,var(--line))}
+.pulse-filter-note{margin-left:auto;font-size:10px;color:var(--muted);white-space:nowrap}
 .pulse-list{flex:1;overflow:auto;overscroll-behavior:contain;padding:3px 9px 10px;scrollbar-width:none}
 .pulse-list::-webkit-scrollbar{display:none}
 .pulse-item{display:grid;grid-template-columns:5px minmax(0,1fr) auto;gap:9px;align-items:stretch;padding:12px 7px;border-bottom:1px solid color-mix(in srgb,var(--line) 72%,transparent);text-decoration:none;color:inherit}
@@ -117,8 +127,8 @@ button{cursor:pointer}
 .nav a,.nav button{border:1px solid var(--line);background:var(--card);border-radius:16px;text-decoration:none;color:var(--text);display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:720;min-width:0;padding:0 7px}
 .nav a:active,.nav button:active{transform:scale(.985);background:var(--card-3)}
 .nav .feedly{background:linear-gradient(180deg,color-mix(in srgb,#2bb24c 25%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#2bb24c 50%,var(--line))}
-.nav .trading{background:linear-gradient(180deg,color-mix(in srgb,#4f7cff 20%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#4f7cff 45%,var(--line))}
-.nav .wallst{background:linear-gradient(180deg,color-mix(in srgb,#d4872c 18%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#d4872c 42%,var(--line))}
+.nav .fidelity{background:linear-gradient(180deg,color-mix(in srgb,#2e8b57 21%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#2e8b57 48%,var(--line))}
+.nav .twitter{background:linear-gradient(180deg,color-mix(in srgb,#4f7cff 18%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#4f7cff 43%,var(--line))}
 .nav .iconbtn{font-size:18px;padding:0}
 .nav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -172,6 +182,18 @@ button{cursor:pointer}
 .data-note{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .data-note>div{border:1px solid var(--line);background:var(--card-2);border-radius:12px;padding:10px}
 .data-note b{display:block;font-size:12px;margin-bottom:4px}.data-note span{font-size:11px;color:var(--muted);line-height:1.5}
+
+.custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.custom-card{border:1px solid var(--line);border-radius:14px;background:var(--card-2);padding:12px}
+.custom-card.wide{grid-column:1/-1}
+.custom-preview{height:92px;border:1px solid var(--line);border-radius:11px;background:var(--panel);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);font-size:11px;margin:8px 0}
+.custom-preview img{width:100%;height:100%;object-fit:cover}
+.custom-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}
+.custom-row input[type=range]{width:100%;accent-color:var(--blue)}
+.custom-row .layout-value{min-width:48px;text-align:right}
+.custom-url{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:8px}
+@media(max-width:700px){.custom-grid{grid-template-columns:1fr}.custom-card.wide{grid-column:auto}}
+
 .toast{position:fixed;z-index:1200;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#111923;color:#fff;border:1px solid rgba(255,255,255,.13);padding:9px 13px;border-radius:12px;font-size:12px;opacity:0;pointer-events:none;transition:.2s}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -196,6 +218,7 @@ button{cursor:pointer}
 <main class="dashboard">
   <section class="top">
     <div class="card clock">
+      <img id="clockPhoto" class="clock-photo" alt="" />
       <div id="time">--:--</div>
       <div id="date">----</div>
       <button id="themeQuick" class="theme-quick" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
@@ -236,6 +259,11 @@ button{cursor:pointer}
     </header>
     <div class="news-stage">
       <div id="pulsePane" class="news-pane active">
+        <div class="pulse-filters">
+          <button id="pulseAllFilter" class="pulse-filter active" onclick="setPulseFilter('all')">全部</button>
+          <button id="pulseImportantFilter" class="pulse-filter" onclick="setPulseFilter('important')">🔴 重要</button>
+          <span class="pulse-filter-note">按 7×24 原始重要度标记</span>
+        </div>
         <div id="pulseList" class="pulse-list"><div class="loading">正在连接 7×24 实时快讯…</div></div>
       </div>
       <div id="calendarPane" class="news-pane hidden">
@@ -257,8 +285,8 @@ button{cursor:pointer}
 
   <nav class="nav">
     <a class="feedly" href="https://feedly.com/i/my" target="_blank" rel="noopener"><span>📰</span><span class="nav-label">Feedly</span></a>
-    <a class="trading" href="https://www.tradingview.com/chart/" target="_blank" rel="noopener"><span>📈</span><span class="nav-label">TradingView</span></a>
-    <a class="wallst" href="https://wallstreetcn.com/live" target="_blank" rel="noopener"><span>⚡</span><span class="nav-label">见闻</span></a>
+    <a class="fidelity" href="https://www.fidelity.com/" target="_blank" rel="noopener"><span>💹</span><span class="nav-label">Fidelity</span></a>
+    <a class="twitter" href="https://x.com/home" target="_blank" rel="noopener"><span>𝕏</span><span class="nav-label">Twitter</span></a>
     <button class="iconbtn" aria-label="设置" onclick="openSettings()">⚙</button>
     <button class="iconbtn refresh" aria-label="刷新" onclick="manualRefresh()">↻</button>
   </nav>
@@ -274,6 +302,7 @@ button{cursor:pointer}
       <button class="settings-tab active" data-pane="stocks" onclick="showSettingsPane('stocks')">股票</button>
       <button class="settings-tab" data-pane="rss" onclick="showSettingsPane('rss')">RSS</button>
       <button class="settings-tab" data-pane="layout" onclick="showSettingsPane('layout')">布局</button>
+      <button class="settings-tab" data-pane="custom" onclick="showSettingsPane('custom')">个性化</button>
       <button class="settings-tab" data-pane="display" onclick="showSettingsPane('display')">显示与备份</button>
     </div>
     <div class="settings-body">
@@ -348,7 +377,48 @@ button{cursor:pointer}
         </div>
         <div class="data-note">
           <div><b>股票 / TradingView</b><span>页面打开时由 TradingView 组件自动持续更新，不是每 15 分钟轮询。是否真正实时取决于具体交易所的数据级别。</span></div>
-          <div><b>RSS / 天气</b><span>快讯 / RSS 每 10 分钟自动刷新；天气每 30 分钟自动刷新；右下角 ↻ 可随时同时强制刷新 RSS 和天气。</span></div>
+          <div><b>RSS / 天气</b><span>7×24 快讯每 20 秒检查；RSS 每 10 分钟、天气每 30 分钟自动刷新；右下角 ↻ 可立即刷新全部外部信息。</span></div>
+        </div>
+      </div>
+
+
+      <div id="pane-custom" class="setting-pane">
+        <div class="help">默认保持当前 DeskBoard 外观不变。这里的图片和参数只保存在当前 iPad 浏览器，不会上传到 GitHub。上传图片会先在本机压缩，避免占用过多存储空间。</div>
+        <div class="custom-grid">
+          <div class="custom-card">
+            <div class="display-title">Dashboard 背景图</div>
+            <div id="bgPreview" class="custom-preview">未设置背景图</div>
+            <div class="settings-actions" style="margin-top:0">
+              <label class="filelabel">上传背景图<input id="backgroundFile" type="file" accept="image/*" hidden onchange="handleBackgroundUpload(event)"></label>
+              <button class="action" onclick="clearBackgroundImage()">移除</button>
+            </div>
+            <div class="custom-url"><input id="backgroundUrl" class="field" placeholder="或粘贴图片 URL"><button class="action" onclick="applyBackgroundUrl()">使用 URL</button></div>
+            <div class="custom-row"><div>背景可见度</div><span id="bgOpacityValue" class="layout-value"></span></div>
+            <input id="bgOpacityRange" type="range" min="0" max="85" step="1" oninput="setAppearanceValue('bgOpacity',this.value)">
+            <div class="custom-row"><div>背景模糊</div><span id="bgBlurValue" class="layout-value"></span></div>
+            <input id="bgBlurRange" type="range" min="0" max="18" step="1" oninput="setAppearanceValue('bgBlur',this.value)">
+            <div class="custom-row"><div>卡片透明度</div><span id="glassValue" class="layout-value"></span></div>
+            <input id="glassRange" type="range" min="76" max="100" step="1" oninput="setAppearanceValue('glass',this.value)">
+          </div>
+
+          <div class="custom-card">
+            <div class="display-title">时间卡收藏图片</div>
+            <div id="photoPreview" class="custom-preview">未设置收藏图片</div>
+            <div class="settings-actions" style="margin-top:0">
+              <label class="filelabel">上传图片<input id="clockPhotoFile" type="file" accept="image/*" hidden onchange="handleClockPhotoUpload(event)"></label>
+              <button class="action" onclick="clearClockPhoto()">移除</button>
+            </div>
+            <div class="custom-row"><label><input id="clockPhotoShow" type="checkbox" onchange="setAppearanceValue('clockPhotoShow',this.checked)"> 显示在时间卡右侧</label><span></span></div>
+            <div class="custom-row"><div>图片透明度</div><span id="photoOpacityValue" class="layout-value"></span></div>
+            <input id="photoOpacityRange" type="range" min="20" max="100" step="1" oninput="setAppearanceValue('clockPhotoOpacity',this.value)">
+            <div class="custom-row"><div>填充方式</div><select id="clockPhotoFit" class="field" style="width:120px" onchange="setAppearanceValue('clockPhotoFit',this.value)"><option value="cover">裁切铺满</option><option value="contain">完整显示</option></select></div>
+          </div>
+
+          <div class="custom-card wide">
+            <div class="display-title">恢复默认外观</div>
+            <div class="help">只重置背景和收藏图片，不会影响主题、股票、RSS 或布局设置。</div>
+            <button class="action" onclick="resetAppearance()">恢复默认个性化设置</button>
+          </div>
         </div>
       </div>
 
@@ -365,7 +435,7 @@ button{cursor:pointer}
 
         <div class="display-card">
           <div class="display-title">配置备份</div>
-          <div class="help">股票、RSS 和主题设置保存在当前 iPad 浏览器的 localStorage。导出一份 JSON 可以在清理 Safari 数据或换设备后恢复。</div>
+          <div class="help">股票、RSS、主题、布局和个性化图片都保存在当前 iPad 浏览器。导出 JSON 可在清理 Safari 数据或换设备后恢复；如果包含图片，导出的文件会明显更大。</div>
           <div class="backup-grid">
             <button class="action" onclick="exportConfig()">导出配置 JSON</button>
             <label class="filelabel">导入配置 JSON<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importConfigFile(event)"></label>
@@ -376,10 +446,10 @@ button{cursor:pointer}
           <div class="display-title">我保留 / 新增的辅助信息</div>
           <div class="help" style="margin:0">
             • 时间卡片同时显示纽约时间，盯美股时不需要换算时区。<br>
-            • 股票由 TradingView 组件保持自动更新；快讯/RSS 每 10 分钟、天气每 30 分钟自动刷新。<br>
+            • 股票由 TradingView 组件保持自动更新；7×24 快讯每 20 秒检查，RSS 每 10 分钟、天气每 30 分钟自动刷新。<br>
             • 实时快讯：华尔街见闻 7×24 优先，20 秒轮询；跨域失败时自动回退备用代理 / RSS。<br>            • RSS 成功源数量与更新时间：快速判断是不是某个订阅源失效。<br>
             • RSS 源健康状态：在设置页逐个显示成功/失败。<br>
-            • 顶部横幅改为 ES/NQ 期货、VIX、美债10Y、美元、黄金、原油、USDJPY，避免和 Watchlist 重复。<br>
+            • 顶部横幅使用 IWM、TLT、HYG、UUP、GLD、USO、FXY 展示风险偏好、利率、信用、美元、黄金、原油和日元环境，避免和 Watchlist 重复。<br>
             • 暂时不加入“开盘/休市”判断、个人持仓、日历和系统电量：交易所节假日会让纯前端判断失真，而后三者需要额外权限或服务，会让这个低维护 Dashboard 变复杂。
           </div>
         </div>
@@ -398,7 +468,8 @@ pulsePane=document.getElementById("pulsePane"),calendarPane=document.getElementB
 settingsBackdrop=document.getElementById("settingsBackdrop"),stockManager=document.getElementById("stockManager"),rssManager=document.getElementById("rssManager"),
 newStockTicker=document.getElementById("newStockTicker"),newStockMarket=document.getElementById("newStockMarket"),newStockLabel=document.getElementById("newStockLabel"),
 stockSearchInput=document.getElementById("stockSearchInput"),stockSearchResults=document.getElementById("stockSearchResults"),
-newFeedName=document.getElementById("newFeedName"),newFeedUrl=document.getElementById("newFeedUrl"),newFeedCat=document.getElementById("newFeedCat");
+newFeedName=document.getElementById("newFeedName"),newFeedUrl=document.getElementById("newFeedUrl"),newFeedCat=document.getElementById("newFeedCat"),
+clockPhoto=document.getElementById("clockPhoto"),pulseAllFilter=document.getElementById("pulseAllFilter"),pulseImportantFilter=document.getElementById("pulseImportantFilter");
 
 const DEFAULT_STOCKS = [
   {symbol:"TVC:SPX",label:"SPX"},{symbol:"NASDAQ:QQQ",label:"QQQ"},
@@ -488,8 +559,9 @@ const DEFAULT_FEEDS = [
   {name:"联合早报·国际",url:"https://plink.anyfeeder.com/zaobao/realtime/world",cat:"world"},
   {name:"法国国际广播电台 RFI",url:"http://www.chinese.rfi.fr/last_24h/rss",cat:"world"}
 ];
-const KEYS={stocks:"deskboard_stocks_v3",feeds:"deskboard_feeds_v3",theme:"deskboard_theme_v3",layout:"deskboard_layout_v6",rssCache:"deskboard_rss_cache_v8",liveCache:"deskboard_live_cache_v1"};
+const KEYS={stocks:"deskboard_stocks_v3",feeds:"deskboard_feeds_v3",theme:"deskboard_theme_v3",layout:"deskboard_layout_v6",appearance:"deskboard_appearance_v1",pulseFilter:"deskboard_pulse_filter_v1",rssCache:"deskboard_rss_cache_v8",liveCache:"deskboard_live_cache_v2"};
 const DEFAULT_LAYOUT={top:118,tape:48,nav:62,split:56,cols:0};
+const DEFAULT_APPEARANCE={bgImage:"",bgOpacity:0,bgBlur:0,glass:100,clockPhoto:"",clockPhotoShow:false,clockPhotoFit:"cover",clockPhotoOpacity:88};
 const CONFIG={fallbackWeather:{lat:47.6769,lon:-122.2060,label:"Kirkland"},rssRefreshMinutes:10,liveRefreshSeconds:20};
 const MACRO_TAPE=[
   {proName:"AMEX:IWM",title:"小盘 IWM"},
@@ -509,10 +581,11 @@ let stocks=loadStored(KEYS.stocks,DEFAULT_STOCKS);
 })();
 let feeds=loadStored(KEYS.feeds,DEFAULT_FEEDS);
 let layout=loadObject(KEYS.layout,DEFAULT_LAYOUT);
+let appearance=loadObject(KEYS.appearance,DEFAULT_APPEARANCE);
 let themeMode=localStorage.getItem(KEYS.theme)||"auto";
 let resolvedTheme="dark";
 let sunrise=null,sunset=null;
-let allNews=[],activeCategory="all",feedStatus={},liveNews=[],liveSourceState="loading",liveStampText="LIVE --:--",rssStampText="RSS --:--",infoMode="pulse";
+let allNews=[],activeCategory="all",feedStatus={},liveNews=[],liveSourceState="loading",liveStampText="LIVE --:--",rssStampText="RSS --:--",infoMode="pulse",pulseFilter=localStorage.getItem(KEYS.pulseFilter)||"all";
 let stockDraft=[],feedDraft=[];
 const FEED_TIMEOUT_MS=12000,CACHE_MS=10*60*1000;
 
@@ -523,6 +596,53 @@ function saveStored(key,v){localStorage.setItem(key,JSON.stringify(v))}
 function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove("show"),1800)}
 function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function escapeAttr(s){return escapeHtml(s||"#")}
+
+/* personalization */
+function cssUrl(v){return v?`url("${String(v).replace(/\\/g,"\\\\").replace(/"/g,'\\"')}")`:'none'}
+function applyAppearance(){
+  const root=document.documentElement;
+  root.style.setProperty('--custom-bg',cssUrl(appearance.bgImage));
+  root.style.setProperty('--bg-opacity',Math.max(0,Math.min(85,Number(appearance.bgOpacity)||0))/100);
+  root.style.setProperty('--bg-blur',`${Math.max(0,Math.min(18,Number(appearance.bgBlur)||0))}px`);
+  root.style.setProperty('--glass-alpha',`${Math.max(76,Math.min(100,Number(appearance.glass)||100))}%`);
+  if(clockPhoto){
+    if(appearance.clockPhoto){clockPhoto.src=appearance.clockPhoto}else{clockPhoto.removeAttribute('src')}
+    clockPhoto.classList.toggle('show',!!appearance.clockPhoto&&!!appearance.clockPhotoShow);
+    clockPhoto.style.objectFit=appearance.clockPhotoFit==='contain'?'contain':'cover';
+    clockPhoto.style.opacity=(Math.max(20,Math.min(100,Number(appearance.clockPhotoOpacity)||88))/100);
+  }
+  const vals={bgOpacityValue:`${appearance.bgOpacity||0}%`,bgBlurValue:`${appearance.bgBlur||0}px`,glassValue:`${appearance.glass||100}%`,photoOpacityValue:`${appearance.clockPhotoOpacity||88}%`};
+  Object.entries(vals).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v});
+  const inputs={bgOpacityRange:appearance.bgOpacity,bgBlurRange:appearance.bgBlur,glassRange:appearance.glass,photoOpacityRange:appearance.clockPhotoOpacity};
+  Object.entries(inputs).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});
+  const cb=document.getElementById('clockPhotoShow');if(cb)cb.checked=!!appearance.clockPhotoShow;
+  const fit=document.getElementById('clockPhotoFit');if(fit)fit.value=appearance.clockPhotoFit||'cover';
+  renderAppearancePreviews();
+}
+function setAppearanceValue(k,v){
+  if(['bgOpacity','bgBlur','glass','clockPhotoOpacity'].includes(k))v=Number(v);
+  appearance[k]=v;saveStored(KEYS.appearance,appearance);applyAppearance();
+}
+function renderAppearancePreviews(){
+  const bp=document.getElementById('bgPreview'),pp=document.getElementById('photoPreview');
+  if(bp)bp.innerHTML=appearance.bgImage?`<img src="${escapeAttr(appearance.bgImage)}" alt="背景预览">`:'未设置背景图';
+  if(pp)pp.innerHTML=appearance.clockPhoto?`<img src="${escapeAttr(appearance.clockPhoto)}" alt="收藏图预览">`:'未设置收藏图片';
+}
+function compressImageFile(file,maxW,maxH,quality=.84){return new Promise((resolve,reject)=>{
+  if(!file?.type?.startsWith('image/'))return reject(new Error('not image'));
+  const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{
+    let w=img.naturalWidth,h=img.naturalHeight,scale=Math.min(1,maxW/w,maxH/h);w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));
+    const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);
+    try{resolve(c.toDataURL('image/jpeg',quality))}catch(e){reject(e)}
+  };img.src=reader.result};reader.readAsDataURL(file)
+})}
+async function handleBackgroundUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.bgImage=await compressImageFile(f,1920,1400,.82);if(!appearance.bgOpacity)appearance.bgOpacity=32;if(appearance.glass===100)appearance.glass=94;saveStored(KEYS.appearance,appearance);applyAppearance();toast('背景图已保存在本机')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
+async function handleClockPhotoUpload(ev){const f=ev.target.files?.[0];if(!f)return;try{appearance.clockPhoto=await compressImageFile(f,1000,700,.86);appearance.clockPhotoShow=true;saveStored(KEYS.appearance,appearance);applyAppearance();toast('收藏图片已加入时间卡')}catch(e){toast('图片处理失败或文件过大')}ev.target.value=''}
+function clearBackgroundImage(){appearance.bgImage='';appearance.bgOpacity=0;saveStored(KEYS.appearance,appearance);applyAppearance();toast('背景图已移除')}
+function clearClockPhoto(){appearance.clockPhoto='';appearance.clockPhotoShow=false;saveStored(KEYS.appearance,appearance);applyAppearance();toast('收藏图片已移除')}
+function applyBackgroundUrl(){const e=document.getElementById('backgroundUrl'),u=e?.value.trim();if(!u)return toast('请输入图片 URL');if(!/^https?:\/\//i.test(u))return toast('请输入 http/https 图片 URL');appearance.bgImage=u;if(!appearance.bgOpacity)appearance.bgOpacity=32;if(appearance.glass===100)appearance.glass=94;saveStored(KEYS.appearance,appearance);applyAppearance();toast('已应用背景 URL')}
+function resetAppearance(){appearance={...DEFAULT_APPEARANCE};saveStored(KEYS.appearance,appearance);applyAppearance();toast('个性化外观已恢复默认')}
+applyAppearance();
 
 /* time */
 function updateClock(){
@@ -587,13 +707,32 @@ function renderForecast(daily){
     return `<div class="forecast-item"><span class="fc-time">${dayLabel(daily.time[i],i)}</span><span class="fc-icon">${wxIcon(code)}</span><span class="fc-temp">${hi}° / ${lo}°</span><span class="fc-rain">${rain}%</span></div>`
   }).join("");
 }
+function aqiMeta(v){
+  const n=Math.round(Number(v));
+  if(!Number.isFinite(n))return {text:"AQI --",color:"var(--muted)"};
+  if(n<=50)return {text:`AQI ${n} 优`,color:"var(--green)"};
+  if(n<=100)return {text:`AQI ${n} 良`,color:"#d89a18"};
+  if(n<=150)return {text:`AQI ${n} 敏感人群注意`,color:"#e87822"};
+  if(n<=200)return {text:`AQI ${n} 不健康`,color:"var(--red)"};
+  if(n<=300)return {text:`AQI ${n} 很不健康`,color:"#8d56c7"};
+  return {text:`AQI ${n} 危险`,color:"#7b1f32"};
+}
 async function loadWeather(lat,lon,label){
   try{
-    const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&temperature_unit=celsius&timezone=auto&forecast_days=5`;
-    const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error("weather");
-    const j=await r.json(),c=j.current,d=j.daily;
+    const weatherUrl=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&temperature_unit=celsius&timezone=auto&forecast_days=5`;
+    const aqiUrl=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
+    const [wr,ar]=await Promise.all([
+      fetch(weatherUrl,{cache:"no-store"}),
+      fetch(aqiUrl,{cache:"no-store"}).catch(()=>null)
+    ]);
+    if(!wr.ok)throw new Error("weather");
+    const j=await wr.json(),c=j.current,d=j.daily;
+    let aqi=null;
+    if(ar&&ar.ok){try{const aj=await ar.json();aqi=aj?.current?.us_aqi}catch(e){}}
+    const humidity=Math.round(Number(c.relative_humidity_2m));
+    const aq=aqiMeta(aqi);
     wxIconEl.textContent=wxIcon(c.weather_code);wxTemp.textContent=Math.round(c.temperature_2m)+"°C";wxPlace.textContent=label||"当前位置";
-    wxExtra.innerHTML=`体感 ${Math.round(c.apparent_temperature)}°C<br>今日 ${Math.round(d.temperature_2m_max[0])}° / ${Math.round(d.temperature_2m_min[0])}°`;
+    wxExtra.innerHTML=`体感 ${Math.round(c.apparent_temperature)}°C<br>湿度 ${Number.isFinite(humidity)?humidity+"%":"--"} · <span style="color:${aq.color};font-weight:760">${aq.text}</span><br>今日 ${Math.round(d.temperature_2m_max[0])}° / ${Math.round(d.temperature_2m_min[0])}°`;
     renderForecast(d);sunrise=d.sunrise?.[0]||null; sunset=d.sunset?.[0]||null;
     if(themeMode==="auto")applyTheme(true);
   }catch(e){wxPlace.textContent="天气暂不可用";wxExtra.textContent="点右下角刷新重试"}
@@ -668,13 +807,20 @@ function catLabel(c){return{finance:"财经",world:"时事",tech:"科技",game:"
 function renderNews(){const el=newsList,items=activeCategory==="all"?allNews:allNews.filter(x=>x.cat===activeCategory);if(!items.length){el.innerHTML='<div class="empty">这个分类暂时没有可显示的条目。</div>';return}el.innerHTML=items.slice(0,44).map(x=>`<a class="news-item" href="${escapeAttr(x.link)}" target="_blank" rel="noopener"><div><div class="news-title">${escapeHtml(x.title)}</div><div class="news-meta"><span class="source">${escapeHtml(x.source)}</span><span class="cat-${x.cat}">${catLabel(x.cat)}</span><span>${relativeTime(x.date)}</span></div></div><div class="openmark">›</div></a>`).join("")}
 function renderPulse(){
   if(!pulseList)return;
+  const importantCount=liveNews.filter(x=>x.score>=2).length;
+  if(pulseAllFilter){pulseAllFilter.classList.toggle("active",pulseFilter==="all");pulseAllFilter.textContent=`全部 ${liveNews.length||""}`.trim()}
+  if(pulseImportantFilter){pulseImportantFilter.classList.toggle("active",pulseFilter==="important");pulseImportantFilter.textContent=`🔴 重要 ${importantCount||""}`.trim()}
   if(liveNews.length){
-    pulseList.innerHTML=liveNews.slice(0,40).map(x=>`<a class="pulse-item ${x.score>=3?'very-important':x.score>=2?'important':''}" href="${escapeAttr(x.link)}" target="_blank" rel="noopener"><span class="pulse-bar"></span><div><div class="pulse-title">${escapeHtml(x.title)}</div><div class="pulse-meta"><span class="source">华尔街见闻 7×24</span>${x.score>=2?'<span style="color:var(--red);font-weight:750">重要</span>':''}<span>${relativeTime(x.date)}</span><span>${x.clock||''}</span></div></div><span class="pulse-arrow">›</span></a>`).join("");return;
+    const shown=(pulseFilter==="important"?liveNews.filter(x=>x.score>=2):liveNews);
+    if(!shown.length){pulseList.innerHTML='<div class="empty">目前这批 7×24 快讯里没有带「重要」标记的条目。<br>切回「全部」可以查看完整实时流。</div>';return}
+    pulseList.innerHTML=shown.map(x=>`<a class="pulse-item ${x.score>=3?'very-important':x.score>=2?'important':''}" href="${escapeAttr(x.link)}" target="_blank" rel="noopener"><span class="pulse-bar"></span><div><div class="pulse-title">${escapeHtml(x.title)}</div><div class="pulse-meta"><span class="source">华尔街见闻 7×24</span>${x.score>=2?'<span style="color:var(--red);font-weight:750">重要</span>':''}<span>${relativeTime(x.date)}</span><span>${x.clock||''}</span></div></div><span class="pulse-arrow">›</span></a>`).join("");return;
   }
+  if(pulseFilter==="important"){pulseList.innerHTML='<div class="empty">当前 7×24 实时源不可达。<br>「重要」筛选只使用原始快讯的重要标记，不会用关键词自行猜测。<br>可切换「全部」查看 RSS 备用流。</div>';return}
   const priority=allNews.filter(x=>x.cat==="finance"||x.cat==="world").sort((a,b)=>b.date-a.date).slice(0,28);
   if(!priority.length){pulseList.innerHTML='<div class="empty">实时快讯暂时无法连接。<br>可切换到「日历」或「RSS」。</div>';return}
   pulseList.innerHTML=priority.map(x=>`<a class="pulse-item ${x.cat}" href="${escapeAttr(x.link)}" target="_blank" rel="noopener"><span class="pulse-bar"></span><div><div class="pulse-title">${escapeHtml(x.title)}</div><div class="pulse-meta"><span class="source">${escapeHtml(x.source)}</span><span class="live-fallback">RSS 备用</span><span>${relativeTime(x.date)}</span></div></div><span class="pulse-arrow">›</span></a>`).join("");
 }
+function setPulseFilter(mode){pulseFilter=mode==="important"?"important":"all";localStorage.setItem(KEYS.pulseFilter,pulseFilter);renderPulse()}
 function updateFilterCounts(){const labels={all:"全部",finance:"财经",world:"时事",tech:"科技",game:"游戏"};document.querySelectorAll(".filter").forEach(b=>{const c=b.dataset.cat,n=c==="all"?allNews.length:allNews.filter(x=>x.cat===c).length;b.textContent=`${labels[c]} ${n}`})}
 function stampTime(t){return new Date(t).toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",hour12:false})}
 function refreshInfoStamp(){lastUpdate.textContent=infoMode==="pulse"?liveStampText:infoMode==="rss"?rssStampText:"经济日历"}
@@ -701,14 +847,39 @@ async function loadNews(force=false){
   }
 }
 
-const LIVE_API="https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&client=pc&limit=40&first_page=true";
+const LIVE_API_LIMIT=100;
+const LIVE_HISTORY_HOURS=24;
+const LIVE_HISTORY_MAX=200;
+const LIVE_API=`https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${LIVE_API_LIMIT}&first_page=true`;
 function normalizeLivePayload(j){
   const items=j?.data?.items;if(!Array.isArray(items))throw new Error("live schema");
   return items.map(x=>{
     const title=cleanText(x.content_text||x.content||x.title||"");
     const ts=Number(x.display_time)||0,date=new Date(ts*1000);
-    return {title,link:x.uri||`https://wallstreetcn.com/livenews/${x.id||""}`,date,score:Number(x.score)||1,clock:date.getTime()?new Intl.DateTimeFormat("zh-CN",{timeZone:"Asia/Shanghai",hour:"2-digit",minute:"2-digit",hour12:false}).format(date):""}
+    return {id:String(x.id||""),title,link:x.uri||`https://wallstreetcn.com/livenews/${x.id||""}`,date,score:Number(x.score)||1,clock:date.getTime()?new Intl.DateTimeFormat("zh-CN",{timeZone:"Asia/Shanghai",hour:"2-digit",minute:"2-digit",hour12:false}).format(date):""}
   }).filter(x=>x.title&&x.date.getTime()).sort((a,b)=>b.date-a.date);
+}
+function readLiveHistory(){
+  try{
+    const c=JSON.parse(localStorage.getItem(KEYS.liveCache)||"null");
+    if(!c?.items?.length)return [];
+    return c.items.map(x=>({...x,date:new Date(x.date)})).filter(x=>x.date.getTime());
+  }catch(e){return []}
+}
+function mergeLiveHistory(fresh,history=liveNews){
+  const cutoff=Date.now()-LIVE_HISTORY_HOURS*60*60*1000;
+  const seen=new Set(),out=[];
+  for(const x of [...fresh,...history].sort((a,b)=>b.date-a.date)){
+    if(!x?.date?.getTime?.()||x.date.getTime()<cutoff)continue;
+    const key=x.id?`id:${x.id}`:`t:${x.date.getTime()}:${x.title}`;
+    if(seen.has(key))continue;
+    seen.add(key);out.push(x);
+    if(out.length>=LIVE_HISTORY_MAX)break;
+  }
+  return out;
+}
+function saveLiveHistory(items){
+  try{localStorage.setItem(KEYS.liveCache,JSON.stringify({saved:Date.now(),items:items.map(x=>({...x,date:x.date.toISOString()}))}))}catch(e){}
 }
 async function fetchLiveDirect(){
   const r=await fetchWithTimeout(LIVE_API,7000);if(!r.ok)throw new Error(`live HTTP ${r.status}`);return normalizeLivePayload(await r.json());
@@ -718,17 +889,19 @@ async function fetchLiveProxy(){
   const r=await fetchWithTimeout(u,9000);if(!r.ok)throw new Error(`proxy HTTP ${r.status}`);return normalizeLivePayload(JSON.parse(await r.text()));
 }
 async function loadLive(force=false){
+  const cached=readLiveHistory();
+  if(!liveNews.length&&cached.length)liveNews=cached;
   try{
     const fresh=await fetchLiveDirect();if(!fresh.length)throw new Error("empty live");
-    liveNews=fresh;liveSourceState="direct";liveStampText=`LIVE · 20s · ${stampTime(Date.now())}`;
-    try{localStorage.setItem(KEYS.liveCache,JSON.stringify({saved:Date.now(),items:fresh.map(x=>({...x,date:x.date.toISOString()}))}))}catch(e){}
+    liveNews=mergeLiveHistory(fresh,cached);saveLiveHistory(liveNews);
+    liveSourceState="direct";liveStampText=`LIVE · ${fresh.length}条/批 · 20s · ${stampTime(Date.now())}`;
   }catch(e1){
     try{
       const fresh=await fetchLiveProxy();if(!fresh.length)throw new Error("empty proxy");
-      liveNews=fresh;liveSourceState="proxy";liveStampText=`LIVE 代理 · ${stampTime(Date.now())}`;
+      liveNews=mergeLiveHistory(fresh,cached);saveLiveHistory(liveNews);
+      liveSourceState="proxy";liveStampText=`LIVE 代理 · ${fresh.length}条/批 · ${stampTime(Date.now())}`;
     }catch(e2){
-      let cache=null;try{cache=JSON.parse(localStorage.getItem(KEYS.liveCache)||"null")}catch(e){}
-      if(cache?.items?.length&&Date.now()-cache.saved<2*60*60*1000){liveNews=cache.items.map(x=>({...x,date:new Date(x.date)}));liveSourceState="cache";liveStampText=`快讯缓存 · ${stampTime(cache.saved)}`}
+      if(cached.length){liveNews=mergeLiveHistory([],cached);liveSourceState="cache";liveStampText=`快讯缓存 · ${liveNews.length}条 · ${stampTime(Date.now())}`}
       else{liveNews=[];liveSourceState="rss";liveStampText=`实时源不可达 · RSS备用`}
     }
   }
@@ -741,12 +914,12 @@ function switchInfo(mode){
   Object.entries(panes).forEach(([k,p])=>p.className="news-pane "+(k===mode?"active":"hidden"));Object.entries(tabs).forEach(([k,b])=>b.classList.toggle("active",k===mode));
   if(mode==="pulse")renderPulse();if(mode==="rss")renderNews();refreshInfoStamp();
 }
-loadNews();loadLive(true);setInterval(()=>loadNews(true),CONFIG.rssRefreshMinutes*60*1000);setInterval(()=>{if(!document.hidden)loadLive(true)},CONFIG.liveRefreshSeconds*1000);
+renderPulse();loadNews();loadLive(true);setInterval(()=>loadNews(true),CONFIG.rssRefreshMinutes*60*1000);setInterval(()=>{if(!document.hidden)loadLive(true)},CONFIG.liveRefreshSeconds*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadLive(true)});
 async function manualRefresh(){const btn=document.querySelector(".refresh");btn.textContent="⋯";try{await Promise.all([loadNews(true),loadLive(true),startWeather()])}finally{setTimeout(()=>btn.textContent="↻",400)}}
 
 /* settings shell */
-function openSettings(){stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();if(stockSearchInput){stockSearchInput.value="";renderStockSearchResults([],"输入股票代码、公司名或关键词即可搜索。")}applyTheme(false);applyLayout(false);settingsBackdrop.classList.add("show")}
+function openSettings(){stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();if(stockSearchInput){stockSearchInput.value="";renderStockSearchResults([],"输入股票代码、公司名或关键词即可搜索。")}applyTheme(false);applyLayout(false);applyAppearance();settingsBackdrop.classList.add("show")}
 function closeSettings(){settingsBackdrop.classList.remove("show")}
 settingsBackdrop.addEventListener("click",e=>{if(e.target===settingsBackdrop)closeSettings()});
 function showSettingsPane(name){document.querySelectorAll(".settings-tab").forEach(b=>b.classList.toggle("active",b.dataset.pane===name));document.querySelectorAll(".setting-pane").forEach(p=>p.classList.toggle("active",p.id===`pane-${name}`))}
@@ -870,7 +1043,7 @@ function addFeed(){
 
 /* backup */
 function exportConfig(){
-  const data={version:5,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout};
+  const data={version:9,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`deskboard-config-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
 }
@@ -882,7 +1055,9 @@ async function importConfigFile(ev){
     if(Array.isArray(j.feeds)&&j.feeds.length){feeds=j.feeds;saveStored(KEYS.feeds,feeds)}
     if(["auto","light","dark"].includes(j.themeMode)){themeMode=j.themeMode;localStorage.setItem(KEYS.theme,themeMode)}
     if(j.layout&&typeof j.layout==="object"){layout={...DEFAULT_LAYOUT,...j.layout};saveStored(KEYS.layout,layout)}
-    localStorage.removeItem(KEYS.rssCache);stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();applyLayout(true);applyTheme(true);loadNews(true);toast("配置已导入")
+    if(j.appearance&&typeof j.appearance==="object"){appearance={...DEFAULT_APPEARANCE,...j.appearance};saveStored(KEYS.appearance,appearance)}
+    if(["all","important"].includes(j.pulseFilter)){pulseFilter=j.pulseFilter;localStorage.setItem(KEYS.pulseFilter,pulseFilter)}
+    localStorage.removeItem(KEYS.rssCache);stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();applyLayout(true);applyTheme(true);applyAppearance();renderPulse();loadNews(true);toast("配置已导入")
   }catch(e){toast("配置文件无法读取")}
   ev.target.value=""
 }
