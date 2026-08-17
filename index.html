@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./icon-180.png" />
 <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-single-ticker.js"></script>
-<title>DeskBoard v9.3 · iPad Dashboard</title>
+<title>DeskBoard v9.4 · iPad Dashboard</title>
 <style>
 :root{
   color-scheme:dark;
@@ -123,7 +123,7 @@ button{cursor:pointer}
 .loading,.empty{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12px;padding:24px;line-height:1.65}
 .nav{
   display:grid;
-  grid-template-columns:auto repeat(4,minmax(0,1fr)) 46px 46px 46px;
+  grid-template-columns:auto repeat(4,minmax(0,1fr)) 46px 46px 46px 46px;
   gap:7px;min-height:0;align-items:stretch;
 }
 .nav-title{
@@ -150,6 +150,13 @@ button{cursor:pointer}
 .nav .iconbtn{font-size:18px;padding:0;background:linear-gradient(180deg,var(--card),var(--card-2))}
 .nav .theme-quick{background:linear-gradient(180deg,color-mix(in srgb,#8a73ff 14%,var(--card)),var(--card-2));border-color:color-mix(in srgb,#8a73ff 34%,var(--line))}
 .nav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.more-wrap{position:relative;display:flex;min-width:0}.more-wrap>button{width:100%}
+.more-pop{position:absolute;right:0;bottom:calc(100% + 8px);width:min(330px,80vw);max-height:46vh;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 46px rgba(0,0,0,.22);padding:8px;display:none;z-index:120;overflow:auto;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.more-pop.show{display:block}.more-pop-title{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em}.more-pop-list{display:grid;gap:6px}
+.more-link{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:9px!important;min-height:42px;padding:7px 9px!important;border-radius:12px!important;background:var(--card-2)!important;box-shadow:none!important}
+.more-link .more-icon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--card-3);font-size:14px;flex:0 0 28px}.more-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start}.more-name{font-size:12px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}.more-host{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;margin-top:1px}.more-empty{padding:14px 8px;text-align:center;color:var(--muted);font-size:11px}.more-manage{width:100%;margin-top:7px;min-height:36px!important;font-size:11px!important;border-radius:11px!important;background:var(--chip)!important;box-shadow:none!important}
+.links-manager{display:grid;gap:8px;margin-top:10px}.link-row{display:grid;grid-template-columns:50px minmax(100px,.7fr) minmax(190px,1.5fr) 34px 34px 34px;gap:6px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}
+@media (max-width:760px){.link-row{grid-template-columns:42px 1fr 1.4fr 32px 32px 32px}.more-pop{width:min(320px,86vw)}}
 
 /* settings */
 .backdrop{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.46);backdrop-filter:blur(5px);display:none;align-items:flex-end;justify-content:center;padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))}
@@ -227,7 +234,7 @@ button{cursor:pointer}
   #time{font-size:36px}
 }
 @media (max-width:900px){
-  .nav{grid-template-columns:auto repeat(4,minmax(0,1fr)) 42px 42px 42px;gap:5px}
+  .nav{grid-template-columns:auto repeat(4,minmax(0,1fr)) 42px 42px 42px 42px;gap:5px}
   .nav-title{padding:0 8px;font-size:10px}.nav a{gap:5px;padding:0 5px}.nav-icon{width:24px;height:24px;flex-basis:24px;font-size:13px}
 }
 @media (max-width:700px){.layout-grid,.data-note{grid-template-columns:1fr}}
@@ -312,6 +319,14 @@ button{cursor:pointer}
     <a class="twitter" href="https://x.com/home" target="_blank" rel="noopener"><span class="nav-icon">𝕏</span><span class="nav-label">Twitter</span></a>
     <a class="feedly" href="https://feedly.com/i/my" target="_blank" rel="noopener"><span class="nav-icon">▤</span><span class="nav-label">Feedly</span></a>
     <a class="fidelity" href="https://www.fidelity.com/" target="_blank" rel="noopener"><span class="nav-icon">↗</span><span class="nav-label">Fidelity</span></a>
+    <div class="more-wrap">
+      <button class="iconbtn" aria-label="更多常用链接" title="更多常用链接" onclick="toggleMoreLinks(event)">⋯</button>
+      <div id="moreLinksPop" class="more-pop">
+        <div class="more-pop-title"><span>更多链接</span><span id="moreLinksCount"></span></div>
+        <div id="moreLinksList" class="more-pop-list"></div>
+        <button class="more-manage" onclick="openLinksSettings()">＋ 管理 / 添加网站</button>
+      </div>
+    </div>
     <button id="themeQuick" class="iconbtn theme-quick" aria-label="切换明暗主题" title="切换明暗主题">◐</button>
     <button class="iconbtn" aria-label="设置" title="设置" onclick="openSettings()">⚙</button>
     <button class="iconbtn refresh" aria-label="刷新" title="刷新" onclick="manualRefresh()">↻</button>
@@ -329,6 +344,7 @@ button{cursor:pointer}
       <button class="settings-tab" data-pane="rss" onclick="showSettingsPane('rss')">RSS</button>
       <button class="settings-tab" data-pane="layout" onclick="showSettingsPane('layout')">布局</button>
       <button class="settings-tab" data-pane="custom" onclick="showSettingsPane('custom')">个性化</button>
+      <button class="settings-tab" data-pane="links" onclick="showSettingsPane('links')">链接</button>
       <button class="settings-tab" data-pane="display" onclick="showSettingsPane('display')">显示与备份</button>
     </div>
     <div class="settings-body">
@@ -407,6 +423,24 @@ button{cursor:pointer}
         </div>
       </div>
 
+
+      <div id="pane-links" class="setting-pane">
+        <div class="help">这里的链接会显示在底部“⋯”菜单，不会额外占用主界面宽度。名称、网址、Emoji 图标和顺序都可以修改。</div>
+        <div id="linksManager" class="links-manager"></div>
+        <div class="addbox">
+          <div class="addtitle">加入新网站</div>
+          <div class="addgrid" style="grid-template-columns:70px minmax(110px,.7fr) minmax(190px,1.5fr) auto">
+            <input id="newLinkEmoji" class="field" value="🔗" maxlength="4" placeholder="图标">
+            <input id="newLinkName" class="field" placeholder="名称">
+            <input id="newLinkUrl" class="field" type="url" placeholder="https://example.com/">
+            <button class="action primary" onclick="addExtraLink()">加入</button>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button class="action primary" onclick="saveExtraLinks()">保存链接</button>
+          <button class="action" onclick="resetExtraLinks()">恢复默认</button>
+        </div>
+      </div>
 
       <div id="pane-custom" class="setting-pane">
         <div class="help">默认保持当前 DeskBoard 外观不变。这里的图片和参数只保存在当前 iPad 浏览器，不会上传到 GitHub。上传图片会先在本机压缩，避免占用过多存储空间。</div>
@@ -505,7 +539,7 @@ settingsBackdrop=document.getElementById("settingsBackdrop"),stockManager=docume
 newStockTicker=document.getElementById("newStockTicker"),newStockMarket=document.getElementById("newStockMarket"),newStockLabel=document.getElementById("newStockLabel"),
 stockSearchInput=document.getElementById("stockSearchInput"),stockSearchResults=document.getElementById("stockSearchResults"),
 newFeedName=document.getElementById("newFeedName"),newFeedUrl=document.getElementById("newFeedUrl"),newFeedCat=document.getElementById("newFeedCat"),
-clockPhoto=document.getElementById("clockPhoto"),customBgLayer=document.getElementById("customBgLayer"),pulseAllFilter=document.getElementById("pulseAllFilter"),pulseImportantFilter=document.getElementById("pulseImportantFilter");
+clockPhoto=document.getElementById("clockPhoto"),customBgLayer=document.getElementById("customBgLayer"),pulseAllFilter=document.getElementById("pulseAllFilter"),pulseImportantFilter=document.getElementById("pulseImportantFilter"),moreLinksPop=document.getElementById("moreLinksPop"),moreLinksList=document.getElementById("moreLinksList"),moreLinksCount=document.getElementById("moreLinksCount");
 
 const DEFAULT_STOCKS = [
   {symbol:"TVC:SPX",label:"SPX"},{symbol:"NASDAQ:QQQ",label:"QQQ"},
@@ -595,7 +629,7 @@ const DEFAULT_FEEDS = [
   {name:"联合早报·国际",url:"https://plink.anyfeeder.com/zaobao/realtime/world",cat:"world"},
   {name:"法国国际广播电台 RFI",url:"http://www.chinese.rfi.fr/last_24h/rss",cat:"world"}
 ];
-const KEYS={stocks:"deskboard_stocks_v3",feeds:"deskboard_feeds_v3",theme:"deskboard_theme_v3",layout:"deskboard_layout_v6",appearance:"deskboard_appearance_v1",pulseFilter:"deskboard_pulse_filter_v1",rssCache:"deskboard_rss_cache_v8",liveCache:"deskboard_live_cache_v2"};
+const KEYS={stocks:"deskboard_stocks_v3",feeds:"deskboard_feeds_v3",theme:"deskboard_theme_v3",layout:"deskboard_layout_v6",appearance:"deskboard_appearance_v1",pulseFilter:"deskboard_pulse_filter_v1",rssCache:"deskboard_rss_cache_v8",liveCache:"deskboard_live_cache_v2",extraLinks:"deskboard_extra_links_v1"};
 const DEFAULT_LAYOUT={top:118,tape:48,nav:62,split:56,cols:0};
 const DEFAULT_APPEARANCE={bgImage:"",bgOpacity:0,bgBlur:0,bgPosX:50,bgPosY:50,glass:100,clockPhoto:"",clockPhotoShow:false,clockPhotoFit:"cover",clockPhotoOpacity:88,clockPhotoPosX:50,clockPhotoPosY:50};
 const CONFIG={fallbackWeather:{lat:47.6769,lon:-122.2060,label:"Kirkland"},rssRefreshMinutes:10,liveRefreshSeconds:20};
@@ -622,6 +656,13 @@ let themeMode=localStorage.getItem(KEYS.theme)||"auto";
 let resolvedTheme="dark";
 let sunrise=null,sunset=null;
 let allNews=[],activeCategory="all",feedStatus={},liveNews=[],liveSourceState="loading",liveStampText="LIVE --:--",rssStampText="RSS --:--",infoMode="pulse",pulseFilter=localStorage.getItem(KEYS.pulseFilter)||"all";
+const DEFAULT_EXTRA_LINKS=[
+  {emoji:"📚",name:"追更",url:"https://ximinhu66.github.io/tsugi-checker/"},
+  {emoji:"🍜",name:"吃什么",url:"https://ximinhu66.github.io/meal-orbit/"}
+];
+let extraLinks=loadJSON(KEYS.extraLinks,DEFAULT_EXTRA_LINKS);
+if(!Array.isArray(extraLinks))extraLinks=clone(DEFAULT_EXTRA_LINKS);
+let extraLinksDraft=clone(extraLinks);
 let stockDraft=[],feedDraft=[];
 const FEED_TIMEOUT_MS=12000,CACHE_MS=10*60*1000;
 
@@ -989,8 +1030,31 @@ renderPulse();loadNews();loadLive(true);setInterval(()=>loadNews(true),CONFIG.rs
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadLive(true)});
 async function manualRefresh(){const btn=document.querySelector(".refresh");btn.textContent="⋯";try{await Promise.all([loadNews(true),loadLive(true),startWeather()])}finally{setTimeout(()=>btn.textContent="↻",400)}}
 
+/* extra links */
+function normalizeExtraUrl(url){let u=String(url||"").trim();if(!u)return "";if(!/^https?:\/\//i.test(u))u="https://"+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:""}catch(e){return ""}}
+function hostLabel(url){try{return new URL(url).hostname.replace(/^www\./,"")}catch(e){return url}}
+function renderMoreLinks(){
+  if(!moreLinksList)return;moreLinksList.innerHTML="";if(moreLinksCount)moreLinksCount.textContent=`${extraLinks.length} 项`;
+  if(!extraLinks.length){moreLinksList.innerHTML='<div class="more-empty">还没有额外链接</div>';return}
+  extraLinks.forEach(x=>{const a=document.createElement("a");a.className="more-link";a.href=x.url;a.target="_blank";a.rel="noopener";a.innerHTML=`<span class="more-icon">${escapeHtml(x.emoji||"🔗")}</span><span class="more-copy"><span class="more-name">${escapeHtml(x.name||hostLabel(x.url))}</span><span class="more-host">${escapeHtml(hostLabel(x.url))}</span></span>`;a.onclick=()=>moreLinksPop?.classList.remove("show");moreLinksList.appendChild(a)})
+}
+function toggleMoreLinks(ev){ev?.stopPropagation();if(!moreLinksPop)return;const show=!moreLinksPop.classList.contains("show");if(show){renderMoreLinks();moreLinksPop.classList.add("show")}else moreLinksPop.classList.remove("show")}
+document.addEventListener("click",e=>{if(moreLinksPop?.classList.contains("show")&&!e.target.closest(".more-wrap"))moreLinksPop.classList.remove("show")});
+function openLinksSettings(){moreLinksPop?.classList.remove("show");openSettings();showSettingsPane("links")}
+function renderLinksManager(){
+  const host=document.getElementById("linksManager");if(!host)return;host.innerHTML="";
+  if(!extraLinksDraft.length){host.innerHTML='<div class="help">还没有额外链接。</div>';return}
+  extraLinksDraft.forEach((x,i)=>{const row=document.createElement("div");row.className="link-row";row.innerHTML=`<input class="field" value="${escapeAttr(x.emoji||"🔗")}" maxlength="4" oninput="extraLinksDraft[${i}].emoji=this.value"><input class="field" value="${escapeAttr(x.name||"")}" placeholder="名称" oninput="extraLinksDraft[${i}].name=this.value"><input class="field" value="${escapeAttr(x.url||"")}" placeholder="https://..." oninput="extraLinksDraft[${i}].url=this.value"><button class="mini" onclick="moveExtraLink(${i},-1)">↑</button><button class="mini" onclick="moveExtraLink(${i},1)">↓</button><button class="mini danger" onclick="deleteExtraLink(${i})">×</button>`;host.appendChild(row)})
+}
+function moveExtraLink(i,d){const j=i+d;if(j<0||j>=extraLinksDraft.length)return;[extraLinksDraft[i],extraLinksDraft[j]]=[extraLinksDraft[j],extraLinksDraft[i]];renderLinksManager()}
+function deleteExtraLink(i){extraLinksDraft.splice(i,1);renderLinksManager()}
+function addExtraLink(){const em=document.getElementById("newLinkEmoji"),nm=document.getElementById("newLinkName"),ur=document.getElementById("newLinkUrl");const url=normalizeExtraUrl(ur?.value||"");if(!url){toast("请输入有效网址");return}extraLinksDraft.push({emoji:(em?.value||"🔗").trim()||"🔗",name:(nm?.value||"").trim()||hostLabel(url),url});if(nm)nm.value="";if(ur)ur.value="";if(em)em.value="🔗";renderLinksManager()}
+function saveExtraLinks(){extraLinks=extraLinksDraft.map(x=>{const url=normalizeExtraUrl(x.url);return url?{emoji:String(x.emoji||"🔗").trim()||"🔗",name:String(x.name||"").trim()||hostLabel(url),url}:null}).filter(Boolean);extraLinksDraft=clone(extraLinks);saveJSON(KEYS.extraLinks,extraLinks);renderLinksManager();renderMoreLinks();toast("常用链接已保存")}
+function resetExtraLinks(){extraLinksDraft=clone(DEFAULT_EXTRA_LINKS);renderLinksManager()}
+renderMoreLinks();
+
 /* settings shell */
-function openSettings(){stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();if(stockSearchInput){stockSearchInput.value="";renderStockSearchResults([],"输入股票代码、公司名或关键词即可搜索。")}applyTheme(false);applyLayout(false);applyAppearance();settingsBackdrop.classList.add("show")}
+function openSettings(){stockDraft=clone(stocks);feedDraft=clone(feeds);extraLinksDraft=clone(extraLinks);renderStockManager();renderRSSManager();renderLinksManager();if(stockSearchInput){stockSearchInput.value="";renderStockSearchResults([],"输入股票代码、公司名或关键词即可搜索。")}applyTheme(false);applyLayout(false);applyAppearance();settingsBackdrop.classList.add("show")}
 function closeSettings(){settingsBackdrop.classList.remove("show")}
 settingsBackdrop.addEventListener("click",e=>{if(e.target===settingsBackdrop)closeSettings()});
 function showSettingsPane(name){document.querySelectorAll(".settings-tab").forEach(b=>b.classList.toggle("active",b.dataset.pane===name));document.querySelectorAll(".setting-pane").forEach(p=>p.classList.toggle("active",p.id===`pane-${name}`))}
@@ -1114,7 +1178,7 @@ function addFeed(){
 
 /* backup */
 function exportConfig(){
-  const data={version:9.3,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter};
+  const data={version:9.4,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter,extraLinks};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`deskboard-config-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
 }
@@ -1128,7 +1192,8 @@ async function importConfigFile(ev){
     if(j.layout&&typeof j.layout==="object"){layout={...DEFAULT_LAYOUT,...j.layout};saveStored(KEYS.layout,layout)}
     if(j.appearance&&typeof j.appearance==="object"){appearance={...DEFAULT_APPEARANCE,...j.appearance};saveStored(KEYS.appearance,appearance)}
     if(["all","important"].includes(j.pulseFilter)){pulseFilter=j.pulseFilter;localStorage.setItem(KEYS.pulseFilter,pulseFilter)}
-    localStorage.removeItem(KEYS.rssCache);stockDraft=clone(stocks);feedDraft=clone(feeds);renderStockManager();renderRSSManager();applyLayout(true);applyTheme(true);applyAppearance();renderPulse();loadNews(true);toast("配置已导入")
+    if(Array.isArray(j.extraLinks)){extraLinks=j.extraLinks;saveJSON(KEYS.extraLinks,extraLinks)}
+    localStorage.removeItem(KEYS.rssCache);stockDraft=clone(stocks);feedDraft=clone(feeds);extraLinksDraft=clone(extraLinks);renderStockManager();renderRSSManager();renderLinksManager();renderMoreLinks();applyLayout(true);applyTheme(true);applyAppearance();renderPulse();loadNews(true);toast("配置已导入")
   }catch(e){toast("配置文件无法读取")}
   ev.target.value=""
 }
