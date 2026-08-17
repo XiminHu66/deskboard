@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./icon-180.png" />
 <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-single-ticker.js"></script>
-<title>DeskBoard v9.4 · iPad Dashboard</title>
+<title>DeskBoard v9.5 · iPad Dashboard</title>
 <style>
 :root{
   color-scheme:dark;
@@ -530,6 +530,8 @@ button{cursor:pointer}
 <div id="toast" class="toast"></div>
 
 <script>
+window.addEventListener("error",e=>console.error("DeskBoard runtime error:",e.error||e.message));
+window.addEventListener("unhandledrejection",e=>console.error("DeskBoard promise error:",e.reason));
 
 const time=document.getElementById("time"),date=document.getElementById("date"),
 wxTemp=document.getElementById("wxTemp"),wxPlace=document.getElementById("wxPlace"),wxExtra=document.getElementById("wxExtra"),
@@ -667,6 +669,18 @@ let stockDraft=[],feedDraft=[];
 const FEED_TIMEOUT_MS=12000,CACHE_MS=10*60*1000;
 
 function clone(x){return JSON.parse(JSON.stringify(x))}
+function loadJSON(key,fallback){
+  try{
+    const raw=localStorage.getItem(key);
+    if(raw===null)return clone(fallback);
+    const v=JSON.parse(raw);
+    return v===null||v===undefined?clone(fallback):v;
+  }catch(e){return clone(fallback)}
+}
+function saveJSON(key,v){
+  try{localStorage.setItem(key,JSON.stringify(v));return true}
+  catch(e){console.warn("DeskBoard localStorage save failed:",key,e);return false}
+}
 function loadStored(key,fallback){try{const v=JSON.parse(localStorage.getItem(key)||"null");return Array.isArray(v)&&v.length?v:clone(fallback)}catch(e){return clone(fallback)}}
 function loadObject(key,fallback){try{const v=JSON.parse(localStorage.getItem(key)||"null");return v&&typeof v==="object"&&!Array.isArray(v)?{...fallback,...v}:{...fallback}}catch(e){return {...fallback}}}
 function saveStored(key,v){localStorage.setItem(key,JSON.stringify(v))}
@@ -1178,7 +1192,7 @@ function addFeed(){
 
 /* backup */
 function exportConfig(){
-  const data={version:9.4,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter,extraLinks};
+  const data={version:9.5,exportedAt:new Date().toISOString(),stocks,feeds,themeMode,layout,appearance,pulseFilter,extraLinks};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`deskboard-config-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
 }
